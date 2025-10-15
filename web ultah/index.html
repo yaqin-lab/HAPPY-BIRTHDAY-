@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HAPPY BIRTHDAY</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: linear-gradient(to bottom, #ffb6c1, #ffe4e1);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      position: relative;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #d63384;
+      text-align: center;
+      margin-top: 15px;
+      margin-bottom: 15px;
+      animation: fadeIn 2s ease-in-out;
+      z-index: 2;
+    }
+
+    /* Tombol Buka Surat */
+    .open-letter-btn {
+      background: #ff4b5c;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1em;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: background 0.3s ease;
+      z-index: 3;
+    }
+    .open-letter-btn:hover {
+      background: #d63384;
+    }
+
+    /* Surat (Pop-up) */
+    .letter-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+    .letter {
+      background: #fff;
+      max-width: 600px;
+      width: 90%;
+      max-height: 70vh; 
+      overflow-y: auto;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.3);
+      text-align: center;
+      animation: zoomIn 0.5s ease;
+      position: relative;
+    }
+    .letter h2 {
+      color: #d63384;
+      margin-bottom: 15px;
+    }
+    .letter p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #444;
+      white-space: pre-line;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: #d63384;
+    }
+
+    @keyframes zoomIn {
+      from {transform: scale(0.5); opacity: 0;}
+      to {transform: scale(1); opacity: 1;}
+    }
+
+    /* Slideshow */
+    .slideshow {
+      width: 50%;
+      max-width: 300px;
+      margin: 25px auto;
+      position: relative;
+      z-index: 2;
+      perspective: 1000px;
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+       object-fit: cover;
+       background: white;
+  padding: 10px 10px 40px 10px;  
+  border-radius: 5px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  transform: rotate(-2deg);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+    .slide.active {
+  display: block;
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 0 15px 25px rgba(0,0,0,0.3);
+}
+    .active {
+      display: block;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+    audio {
+      display: none;
+    }
+    .footer {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #444;
+      z-index: 2;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    /* Balon */
+    .balloon {
+      position: absolute;
+      bottom: -100px;
+      width: 50px;
+      height: 70px;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--color));
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      animation: floatUp linear forwards;
+      z-index: 1;
+    }
+    .balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      width: 2px;
+      height: 30px;
+      background: #555;
+      transform: translateX(-50%);
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0) rotate(0deg); opacity: 1; }
+      to { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 12px;
+      background-color: var(--color);
+      top: -10px;
+      animation: fall linear forwards;
+      opacity: 0.8;
+      z-index: 1;
+    }
+    @keyframes fall {
+      from { transform: translateY(0) rotate(0deg); }
+      to { transform: translateY(110vh) rotate(360deg); }
+    }
+    .content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  margin: 20px auto;
+  flex-wrap: wrap; 
+}
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;500;600&display=swap');
+
+/* Bagian ucapan */
+.ucapan-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 15px;
+  animation: fadeIn 2.5s ease-in-out;
+}
+
+.ucapan-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  max-width: 800px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  padding: 25px 30px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+.judul-ucapan {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.2em;
+  color: #d63384;
+  margin-bottom: 15px;
+}
+
+.container-ucapan {
+  max-height: 400px;
+  overflow-y: auto; /* aktifkan scroll kalau teks terlalu panjang */   
+  margin: 50px auto;      
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  padding: 20px 25px;     
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.teks-ucapan {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+  white-space: pre-line;
+  text-align: justify;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeText {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .judul-ucapan {
+    font-size: 1.8em;
+  }
+  .teks-ucapan {
+    font-size: 0.95em;
+  }
+}
+.start-btn {
+  background-color: #d63384;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  font-size: 1em;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.start-btn:hover {
+  background-color: #b0246a;
+}
+  </style>
+</head>
+<body>
+
+  <h1>🎉 Selamat Ulang Tahun ke-17 🎂</h1>
+
+  <!-- Tombol Buka Surat -->
+  <button class="open-letter-btn" id="openLetterBtn">💌 Buka Surat Spesial</button>
+
+  <!-- Pop-up Surat -->
+  <div class="letter-overlay" id="letterOverlay">
+    <div class="letter">
+      <button class="close-btn" id="closeLetterBtn">&times;</button>
+      <h2>Ucapan Spesial Untukmu ✨</h2>
+      <p>HAPPY BIRTHDAY SAYANG YANG KE 17  
+        Hari ini bukan hanya hari ulang tahunmu, tapi juga hari yang sangat berarti buatku.  
+      Karena di tanggal ini, dunia menyambut kehadiran seseorang yang luar biasa — seseorang yang kini menjadi bagian penting dalam hidup akuu 💫
+
+      Selamat ulang tahun yang ke-17, sayangg
+
+      Tujuh belas tahun adalah usia yang begitu indah… masa ketika langkahmu mulai menapaki dunia yang lebih luas, ketika mimpi-mimpi mulai terasa dekat, dan semua kemungkinan terbuka lebar seperti langit malam penuh bintang 🌌✨
+
+      Aku bersyukur bisa mengenalmu, menyaksikan senyummu yang manis, mendengar tawamu yang menenangkan, dan merasakan hangatnya kehadiranmu di setiap hari. Kamu membawa warna baru ke dalam hidupku, membuat segalanya terasa lebih hidup dan berarti 
+
+      Di hari spesialmu ini, aku ingin kamu tahu betapa besar arti dirimu bagiku.  
+      Kamu bukan hanya pacar, kamu adalah sosok yang selalu aku pikirkan, seseorang yang selalu aku doakan dalam diam, dan seseorang yang keberadaannya membuat aku ingin menjadi versi terbaik dari diriku sendiri.
+
+      Aku bangga denganmu — dengan semua kebaikan, semua masalah yang pernah kamu hadapin, ketulusan, dan keberanianmu.  
+      Kamu sudah tumbuh menjadi sosok yang begitu luar biasa,  lembut namun kuat, ceria namun penuh makna, sederhana namun begitu istimewa ✨
+
+      Di usia ke-17 ini, aku berharap setiap langkahmu selalu dipenuhi cahaya kebahagiaan.  
+      Semoga semua impian yang kamu simpan dalam hati satu per satu menjadi kenyataan.  
+      Semoga setiap harimu dikelilingi oleh orang-orang baik, cinta yang tulus, dan kehangatan yang tak pernah padam 🕊
+
+      Aku juga berharap, aku bisa terus ada di sampingmu… bukan hanya untuk menemani tawa, tapi juga untuk mendukungmu dalam setiap perjalanan hidupmu. Aku ingin jadi seseorang yang selalu bisa kamu andalkan, baik dalam suka maupun duka 💖
+
+      Terima kasih, sayang, karena telah hadir dalam hidupku.  
+      Terima kasih sudah menjadi dirimu yang apa adanya.  
+      Terima kasih telah mencintaiku dengan cara yang begitu lembut dan tulus.
+
+      Selamat ulang tahun yang ke-17, sayanggg 🌷  
+      Jadilah dirimu yang hebat, teruslah bermimpi setinggi langit, dan percayalah… kamu pantas mendapatkan segala kebaikan di dunia ini.
+
+      Aku akan terus berdoa agar setiap harimu dipenuhi senyum, hatimu dipenuhi kedamaian, dan hidupmu dipenuhi kebahagiaan tanpa akhir.
+
+      Happy Sweet Seventeen, sayangg
+      </p>
+    </div>
+  </div>
+
+  <!-- Slideshow Foto -->
+  <div class="slideshow">
+    <img src="images/foto 1.jpg" class="slide active" alt="Foto 1">
+    <img src="images/foto 2.jpg" class="slide" alt="Foto 2">
+    <img src="images/foto 3 .jpg" class="slide" alt="Foto 3">
+    <img src="images/foto 4.jpg" class="slide" alt="Foto 4">
+    <img src="images/foto 5.jpg" class="slide" alt="Foto 5">
+    <img src="images/foto 6.jpg" class="slide" alt="Foto 6">
+    <img src="images/foto 7.jpg" class="slide" alt="Foto 7">
+    <img src="images/foto 8.jpg" class="slide" alt="Foto 8">
+    <img src="images/foto 9.jpg" class="slide" alt="Foto 9">
+    <img src="images/foto 10.jpg" class="slide" alt="Foto 10">
+    <img src="images/foto 11.jpg" class="slide" alt="Foto 11">
+    <img src="images/foto 12.jpg" class="slide" alt="Foto 12">
+    <img src="images/foto 13.jpg" class="slide" alt="Foto 13">
+    <img src="images/foto 14.jpg" class="slide" alt="Foto 14">
+    <img src="images/foto 15.jpg" class="slide" alt="Foto 15">
+    <img src="images/foto 16.jpg" class="slide" alt="Foto 16">
+    <img src="images/foto 17.jpg" class="slide" alt="Foto 17">
+    <img src="images/foto 18.jpg" class="slide" alt="Foto 18">
+    <img src="images/foto 19.jpg" class="slide" alt="Foto 19">
+    <img src="images/foto 20.jpg" class="slide" alt="Foto 20">
+    <img src="images/foto 21.jpg" class="slide" alt="Foto 21">
+  </div>
+
+  <!-- Musik Otomatis -->
+  <audio id="bgm" autoplay loop>
+    <source src="music/Nadin Amizah - Semua Aku Dirayakan (Official Music Video).mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="footer">
+    Dibuat dengan 💖 untuk hari spesialmu
+  </div>
+
+  <script>
+    // === Slideshow otomatis ===
+    const slides = document.querySelectorAll('.slide');
+    let index = 0;
+    function showNextSlide() {
+      slides[index].classList.remove('active');
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('active');
+    }
+    setInterval(showNextSlide, 3000);
+
+    // === Autoplay musik ===
+    window.addEventListener('click', () => {
+      document.getElementById('bgm').play();
+    });
+
+    // === Efek Balon ===
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+      balloon.style.left = Math.random() * 100 + 'vw';
+      balloon.style.animationDuration = 8 + Math.random() * 5 + 's';
+      balloon.style.setProperty('--color', getRandomColor());
+      document.body.appendChild(balloon);
+      setTimeout(() => balloon.remove(), 13000);
+    }
+    function getRandomColor() {
+      const colors = ['#ff4b5c', '#ffaf40', '#ffe227', '#6bcB77', '#4d96ff', '#ff6f91'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+    setInterval(createBalloon, 1200);
+
+    // === Efek Confetti ===
+    function createConfetti() {
+      const confetti = document.createElement('div');
+      confetti.classList.add('confetti');
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.animationDuration = 3 + Math.random() * 3 + 's';
+      confetti.style.setProperty('--color', getRandomColor());
+      confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 7000);
+    }
+    setInterval(createConfetti, 200);
+
+    // === Pop-up Surat ===
+    const openBtn = document.getElementById('openLetterBtn');
+    const overlay = document.getElementById('letterOverlay');
+    const closeBtn = document.getElementById('closeLetterBtn');
+
+    openBtn.addEventListener('click', () => {
+      overlay.style.display = 'flex';
+    });
+    closeBtn.addEventListener('click', () => {
+      overlay.style.display = 'none';
+    });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
